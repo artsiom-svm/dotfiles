@@ -1,0 +1,881 @@
+{
+	"name": "vscode-brazil",
+	"displayName": "Viceroy",
+	"description": "Brazil/Amazon integration",
+	"version": "0.43.0",
+	"publisher": "marklel",
+	"license": "UNLICENSED",
+	"icon": "assets/icons/extension-icon.png",
+	"repository": {
+		"type": "git",
+		"url": "https://code.amazon.com/packages/Viceroy/commits/b11d1ef0e1d201ae347d07b4635c77ccd2276f1e"
+	},
+	"engines": {
+		"vscode": "^1.40.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"main": "src/extension",
+	"scripts": {
+		"pretest": "gulp compile",
+		"test": "gulp test",
+		"clean": "gulp clean",
+		"build": "gulp",
+		"package": "gulp package",
+		"release": "gulp release",
+		"vstest": "gulp vstest"
+	},
+	"npm-pretty-much": {
+		"allowUnsafeName": "vscode extension name",
+		"runRelease": "release"
+	},
+	"prettier": {
+		"tabWidth": 4,
+		"printWidth": 120,
+		"arrowParens": "avoid",
+		"singleQuote": true,
+		"overrides": [
+			{
+				"files": "*.json",
+				"options": {
+					"printWidth": 80
+				}
+			}
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*": "prettier --write",
+		"*.ts": "eslint --fix"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@amzn/brazil": "*",
+		"@amzn/vscode-marketplace": "*",
+		"@types/adm-zip": "^0.4.32",
+		"@types/chai": "^4.2.15",
+		"@types/debounce-promise": "^3.1.1",
+		"@types/ini": "^1.3.30",
+		"@types/mocha": "^8.2.1",
+		"@types/node": "^12.12.5",
+		"@types/sinon": "^9.0.10",
+		"@types/sinon-chai": "^3.2.3",
+		"@types/vscode": "1.40.0",
+		"@types/xml2js": "^0.4.5",
+		"@typescript-eslint/eslint-plugin": "^4.15.0",
+		"@typescript-eslint/parser": "^4.15.0",
+		"chai": "^4.3.0",
+		"esbuild": "^0.11.13",
+		"eslint": "^7.20.0",
+		"eslint-config-airbnb-typescript": "^12.3.1",
+		"eslint-config-prettier": "^7.2.0",
+		"eslint-plugin-import": "^2.22.1",
+		"gulp": "^4.0.2",
+		"husky": "^4.3.8",
+		"lint-staged": "^10.5.4",
+		"mocha": "^8.3.0",
+		"mocha-multi": "^1.1.3",
+		"node-html-parser": "^1.1.15",
+		"nyc": "^15.1.0",
+		"pegjs": "0.10.0",
+		"prettier": "^2.2.1",
+		"pug": "^3.0.0",
+		"rimraf": "^3.0.2",
+		"sass.js": "^0.11.1",
+		"sinon": "^9.2.4",
+		"sinon-chai": "^3.5.0",
+		"source-map-support": "^0.5.12",
+		"ts-node": "^9.1.1",
+		"ts-sinon": "^2.0.1",
+		"typescript": "^4.1.5",
+		"vsce": "^1.85.0",
+		"vscode-test": "^1.3.0",
+		"@amzn/amazon-ca-certs": "*",
+		"@amzn/logger": "*",
+		"@amzn/viceroy-api": "*",
+		"adm-zip": "^0.5.3",
+		"axios": "^0.21.1",
+		"axios-cookiejar-support": "^0.5.1",
+		"cookiefile": "^1.0.10",
+		"debounce-promise": "^3.1.2",
+		"dot-properties": "^1.0.1",
+		"find-java-home": "^1.2.0",
+		"ini": "^1.3.5",
+		"js-yaml": "^3.13.1",
+		"reflect-metadata": "^0.1.13",
+		"tempy": "^1.0.1",
+		"tsyringe": "^4.4.0",
+		"vscode-uri": "^2.1.1",
+		"xml2js": "^0.4.19"
+	},
+	"mocha": {
+		"timeout": 500,
+		"slow": 25,
+		"spec": [
+			"src/lib/**/*.test.ts",
+			"src/dependency-injection/**/*.test.ts"
+		],
+		"require": [
+			"./src/test.bootstrap"
+		],
+		"inline-diffs": true,
+		"reporter": "mocha-multi",
+		"reporter-options": [
+			"spec=-",
+			"xunit=build/brazil-unit-tests/BRAZIL-UNIT-TESTS.xml"
+		]
+	},
+	"nyc": {
+		"reporter": [
+			"cobertura",
+			"html",
+			"text"
+		],
+		"exclude": "src/**/*.test.ts",
+		"extension": ".ts",
+		"report-dir": "build/brazil-documentation/coverage",
+		"temp-dir": "build/private/nyc"
+	},
+	"activationEvents": [
+		"workspaceContains:packageInfo",
+		"workspaceContains:Config",
+		"onCommand:viceroy.autoUpdate",
+		"onCommand:viceroy.bemol",
+		"onCommand:viceroy.java.classpath",
+		"onCommand:viceroy.python.setup",
+		"onCommand:viceroy.ruby.setup",
+		"onCommand:viceroy.android.setup",
+		"onCommand:viceroy.js.setup",
+		"onCommand:viceroy.golang.setup",
+		"onCommand:viceroy.workspace.configure",
+		"onCommand:viceroy.workspace.resolveDependencies",
+		"onCommand:viceroy.build.recursive",
+		"onCommand:viceroy.workspace.build",
+		"onCommand:viceroy.feedback.bug",
+		"onCommand:viceroy.feedback.feature",
+		"onCommand:viceroy.navigate.code.url",
+		"onCommand:viceroy.open.versionSet",
+		"onCommand:viceroy.open.marketplace",
+		"onCommand:viceroy.open.Config",
+		"onCommand:viceroy.welcome",
+		"onCommand:viceroy.mwinit",
+		"onCommand:viceroy.brazil.ws.create",
+		"onCommand:viceroy.brazil.packagecache.restart",
+		"onCommand:viceroy.brazil.packagecache.cleanup",
+		"onCommand:viceroy.brazil.pb.build",
+		"onCommand:viceroy.brazil.ws.dryrun",
+		"onCommand:viceroy.brazil.ws.sync.md",
+		"onCommand:viceroy.brazil.ws.refresh",
+		"onCommand:viceroy.brazil.ws.use.vs",
+		"onCommand:viceroy.brazil.ws.use.vs.suggestions",
+		"onCommand:viceroy.brazil.ws.use.vs.rev",
+		"onCommand:viceroy.brazil.ws.use.p",
+		"onCommand:viceroy.brazil.ws.remove.p",
+		"onCommand:viceroy.brazil.ws.clean",
+		"onCommand:viceroy.brazil.build",
+		"onCommand:viceroy.rde.docs",
+		"onCommand:viceroy.rde.wflow.step",
+		"onCommand:viceroy.rde.wflow.run",
+		"onCommand:viceroy.rde.stack.exec.shell",
+		"onCommand:viceroy.crux.create",
+		"onCommand:viceroy.aws.consoleAccess",
+		"onCommand:viceroy.aws.accountDetails",
+		"onCommand:viceroy.aws.configureAdaCredentialProcess",
+		"onCommand:viceroy.brazil-cdk.create.launch.json",
+		"onCommand:viceroy.brazil.setup.platform-support.enable",
+		"onCommand:viceroy.sim.view-query",
+		"onCommand:viceroy.brazil.setup.platform-support.disable"
+	],
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "Viceroy",
+			"properties": {
+				"viceroy.config.brazilBinPath": {
+					"scope": "resource",
+					"type": "string",
+					"default": "",
+					"description": "Location of brazil tools. Usually you can leave this blank and Viceroy will figure it out but just in case, you can customize."
+				},
+				"viceroy.config.logLevel": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"off",
+						"debug",
+						"info",
+						"warn",
+						"error",
+						"fatal"
+					],
+					"default": "info",
+					"description": "Extension log level: off, debug, info, warn, error, fatal."
+				},
+				"viceroy.config.resolveSymlinks": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"prompt",
+						"resolve",
+						"ignore"
+					],
+					"enumDescriptions": [
+						"Show a prompt everytime this situation is detected",
+						"Resolve the symlinks without prompting",
+						"Ignore the situation and continue with whatever path is given"
+					],
+					"default": "prompt",
+					"description": "How should viceroy handle workspaces paths with symlinks."
+				},
+				"viceroy.config.promptForWorkspaceMode": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"onOpen",
+						"never"
+					],
+					"enumDescriptions": [
+						"Show a prompt when opening a brazil workspace as a folder",
+						"Never prompt"
+					],
+					"default": "onOpen",
+					"description": "If or when viceroy should prompt about experimental workspace mode."
+				},
+				"viceroy.config.internal.autoUpdate": {
+					"scope": "resource",
+					"type": "string",
+					"default": "daily",
+					"enum": [
+						"monthly",
+						"weekly",
+						"daily",
+						"off"
+					],
+					"description": "Enable automatic check for updates."
+				},
+				"viceroy.config.internal.lastUpdateTime": {
+					"scope": "resource",
+					"type": "string",
+					"default": "null",
+					"description": "(Internal) Last date/time Viceroy checked for updates."
+				},
+				"viceroy.config.internal.resolveDependenciesApplyDelaySec": {
+					"scope": "resource",
+					"type": "number",
+					"default": "10",
+					"description": "(Internal) Delay before Viceroy auto resolves dependencies after workspace change. (default 10)"
+				},
+				"viceroy.config.serverEndpoint": {
+					"scope": "resource",
+					"type": "string",
+					"default": "prod",
+					"description": "Endpoint for viceroy server data. One of [prod, integ, local], defaults to prod."
+				},
+				"viceroy.config.beautyMode": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Enables photo backdrops on HTML views. Defaults to true."
+				},
+				"viceroy.config.lastVersion": {
+					"scope": "application",
+					"type": "string",
+					"default": null,
+					"description": "(Interal) Last Viceory version used. This is used for settings changes during Viceroy upgrade."
+				},
+				"viceroy.config.metrics.enabled": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Enables reporting of metrics. Defaults to true."
+				},
+				"viceroy.config.metrics.sendDelaySeconds": {
+					"scope": "resource",
+					"type": "integer",
+					"default": 30,
+					"description": "Metrics are sent x seconds after startup. Default value is 30."
+				},
+				"viceroy.config.metrics.sendIntervalMinutes": {
+					"scope": "resource",
+					"type": "integer",
+					"default": 30,
+					"description": "Metrics are sent every x minutes. Default value is 30."
+				},
+				"viceroy.config.autoReloadWorkspaceFolders": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "In workspace mode, determines if viceroy should automatically add or remove packages when the brazil workspace changes."
+				},
+				"viceroy.config.includeWorkspaceAsFolder": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "In workspace mode, determines if viceroy should include the brazil workspace root folder (🇧🇷) or not."
+				},
+				"viceroy.brazil.packageSearchExclude": {
+					"scope": "window",
+					"type": "object",
+					"default": {
+						"**/build": true,
+						"**/node_modules": true,
+						"**/env": true
+					},
+					"description": "Glob patterns of files to exclude when searching for brazil Config files in the workspace. Similar to #files.exclude#"
+				},
+				"viceroy.marketplace.extensionUpdateChannels": {
+					"scope": "application",
+					"type": "object",
+					"description": "Update channel for Viceroy managed extensions."
+				},
+				"viceroy.android.aarBuildType": {
+					"scope": "resource",
+					"type": "string",
+					"default": "release",
+					"enum": [
+						"release",
+						"debug"
+					],
+					"description": "AAR build type: [release, debug]; defaults to release."
+				},
+				"viceroy.java.skipWorkspacePackageLibs": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Skips lib files from workspace packages. Only applies when #viceroy.java.classpathLocation# is workspace-root."
+				},
+				"viceroy.java.autoCleanAfterClasspath": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Runs the Java Clean workspace command after generating classpath."
+				},
+				"viceroy.java.classpathLocation": {
+					"scope": "window",
+					"type": "string",
+					"default": "workspace-root",
+					"enum": [
+						"workspace-root",
+						"package-root"
+					],
+					"enumDescriptions": [
+						"A single .classpath and .project file in the Brazil workspace root",
+						"A .classpath and .project file in each Brazil Java package"
+					],
+					"description": "Location of .project and .classpath files Viceroy generates."
+				},
+				"viceroy.java.classpathOutput": {
+					"scope": "window",
+					"type": "string",
+					"default": "all",
+					"enum": [
+						"eclipse-classpath",
+						"project-libs",
+						"all"
+					],
+					"enumDescriptions": [
+						"Creates a .classpath and .project file in the workspace root",
+						"Adds libs to workspace #java.project.referencedLibraries# setting",
+						"Creates both a .classpath and .project and writes #java.project.referencedLibraries# setting"
+					],
+					"description": "Java classpath command output format. Runtime and test dependencies should always come before build tool dependencies. Only applies when #viceroy.java.classpathLocation# is workspace-root."
+				},
+				"viceroy.java.brazilPathRecipes": {
+					"scope": "resource",
+					"type": "array",
+					"default": [
+						"testrun.classpath",
+						"tooldirect.classpath",
+						"testrun.src"
+					],
+					"description": "Recipes used to resolve Java classpath. Generally you don't need to tweak this but advanced users may want to. w?BrazilBuildSystem/Tools/BrazilPath/Recipe"
+				},
+				"viceroy.java.useBemol": {
+					"scope": "window",
+					"type": "boolean",
+					"default": true,
+					"description": "Use bemol to generate java classpaths."
+				},
+				"viceroy.python.useBemol": {
+					"scope": "window",
+					"type": "boolean",
+					"default": true,
+					"description": "Use bemol to resolve python path."
+				},
+				"viceroy.__workspace__": {
+					"scope": "resource",
+					"type": "object",
+					"description": "Internal structure for storing Viceroy specific brazil workspace configuration."
+				},
+				"viceroy.throttle.bmds.vsRevisions": {
+					"scope": "resource",
+					"type": "integer",
+					"default": 40,
+					"description": "How many revisions to load when switching version set revision."
+				},
+				"viceroy.throttle.bmds.packageSearchResults": {
+					"scope": "resource",
+					"type": "integer",
+					"default": 60,
+					"description": "How many packages search results are returned from BMDS."
+				},
+				"viceroy.throttle.bmds.autoCompleteLength": {
+					"scope": "resource",
+					"type": "integer",
+					"default": 20,
+					"description": "By default, auto complete returns only suggestions from the version set until there are less than this number. Once less than this, Viceroy adds results from BMDS."
+				},
+				"viceroy.doc.welcome.showAtStartup": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "If true, shows Viceroy welcome page on every start."
+				},
+				"viceroy.lab.languageStrategy": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Detects packages language and resolves dependencies."
+				},
+				"viceroy.lab.marketplace": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Extension marketplace."
+				},
+				"viceroy.lab.autoLanguageStrategy": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": false,
+					"description": "Automatically resolves dependencies on workspace changes."
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "viceroy.autoUpdate",
+				"title": "Check for updates",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.bemol",
+				"title": "Run bemol to resolve dependencies (bemol --verbose)",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.java.classpath",
+				"title": "Generate Java classpath -- powered by Bemol",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.python.setup",
+				"title": "Python setup (beta) -- powered by Bemol",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.ruby.setup",
+				"title": "Ruby setup (beta) -- powered by Bemol",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.android.setup",
+				"title": "Android setup (alpha)",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.js.setup",
+				"title": "Javascript/Typescript setup (beta)",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.golang.setup",
+				"title": "Golang setup (beta)",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.workspace.configure",
+				"title": "Configure workspace",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.workspace.resolveDependencies",
+				"title": "Resolve dependencies (get library paths with brazil-path)",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.build.recursive",
+				"title": "Recursive build (brazil-recursive-cmd 'brazil-build ...')",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.workspace.build",
+				"title": "Build workspace",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.feedback.bug",
+				"title": "Report issue",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.feedback.feature",
+				"title": "Request feature",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.navigate.code.url",
+				"title": "Open in code.amazon.com",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.open.versionSet",
+				"title": "Show brazil version set info",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.open.marketplace",
+				"title": "Extension marketplace",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.open.Config",
+				"title": "Show brazil package info",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.welcome",
+				"title": "Show welcome screen",
+				"category": "viceroy"
+			},
+			{
+				"command": "viceroy.mwinit",
+				"title": "mwinit (Initialize Midway)",
+				"category": "amazon"
+			},
+			{
+				"command": "viceroy.brazil.ws.create",
+				"title": "brazil ws create -n (Create workspace)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.packagecache.restart",
+				"title": "brazil-package-cache stop and start (Restart Package Cache)",
+				"category": "brazil-package-cache"
+			},
+			{
+				"command": "viceroy.brazil.packagecache.cleanup",
+				"title": "brazil-package-cache cleanup (Cleanup Package Cache)",
+				"category": "brazil-package-cache"
+			},
+			{
+				"command": "viceroy.brazil.pb.build",
+				"title": "brazil bp build -vs ... -p ... -mv ... --useCurrentRelease",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.dryrun",
+				"title": "ws dryrun -p (Workspace dryrun)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.sync.md",
+				"title": "ws sync --md (Update version set revision)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.refresh",
+				"title": "Refresh workspace view",
+				"icon": {
+					"dark": "./assets/icons/dark/refresh.svg",
+					"light": "./assets/icons/light/refresh.svg"
+				},
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.use.vs",
+				"title": "ws use -vs (Use/switch version set)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.use.vs.suggestions",
+				"title": "ws use -vs (Use/switch version set with suggestions)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.use.vs.rev",
+				"title": "ws use -vs -eid (Use version set revision)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.use.p",
+				"title": "ws use -p (Use package/add package to workspace)",
+				"icon": "./assets/icons/add-package.svg",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.remove.p",
+				"title": "ws remove -p (Remove package from workspace)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.ws.clean",
+				"title": "ws clean (Clean workspace)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.brazil.build",
+				"title": "build (Brazil build)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.rde.docs",
+				"title": "Get started with RDE",
+				"category": "rde"
+			},
+			{
+				"command": "viceroy.rde.wflow.step",
+				"title": "stack wflow run -s (Execute a single RDE step)",
+				"category": "rde"
+			},
+			{
+				"command": "viceroy.rde.wflow.run",
+				"title": "wflow run (Execute an RDE workflow)",
+				"category": "rde"
+			},
+			{
+				"command": "viceroy.rde.stack.exec.shell",
+				"title": "stack exec <stack> shell (Open a shell on the given RDE stack)",
+				"category": "rde"
+			},
+			{
+				"command": "viceroy.crux.create",
+				"title": "cr -i (Create a code review)",
+				"category": "crux"
+			},
+			{
+				"command": "viceroy.aws.consoleAccess",
+				"title": "Console access (via conduit/isenguard)",
+				"category": "aws internal"
+			},
+			{
+				"command": "viceroy.aws.accountDetails",
+				"title": "Account Details",
+				"category": "aws internal"
+			},
+			{
+				"command": "viceroy.aws.configureAdaCredentialProcess",
+				"title": "Configure credential_process via ADA",
+				"category": "aws internal"
+			},
+			{
+				"command": "viceroy.brazil-cdk.create.launch.json",
+				"title": "Create a launch.json for a Brazil CDK application",
+				"category": "brazil-cdk"
+			},
+			{
+				"command": "viceroy.brazil.setup.platform-support.enable",
+				"title": "setup platform-support (Enable platform overlay)",
+				"category": "brazil"
+			},
+			{
+				"command": "viceroy.sim.view-query",
+				"title": "Open query in SIM",
+				"category": "sim"
+			},
+			{
+				"command": "viceroy.brazil.setup.platform-support.disable",
+				"title": "setup platform-support --mode overlay (Disable platform overlay)",
+				"category": "brazil"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "viceroy.workspace.resolveDependencies",
+					"when": "config.viceroy.lab.languageStrategy"
+				},
+				{
+					"command": "viceroy.workspace.resolveDependencies",
+					"when": "config.viceroy.lab.autoLanguageStrategy"
+				},
+				{
+					"command": "viceroy.open.marketplace",
+					"when": "config.viceroy.lab.marketplace"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "viceroy.navigate.code.url",
+					"group": "8_viceroy"
+				}
+			],
+			"editor/title/context": [
+				{
+					"command": "viceroy.navigate.code.url",
+					"group": "8_viceroy"
+				}
+			],
+			"view/title": [
+				{
+					"command": "viceroy.brazil.ws.sync.md",
+					"when": "view == brazilWorkspace"
+				},
+				{
+					"command": "viceroy.brazil.ws.refresh",
+					"group": "navigation",
+					"when": "view == brazilWorkspace"
+				},
+				{
+					"command": "viceroy.brazil.ws.refresh",
+					"group": "navigation",
+					"when": "view == awsAccounts"
+				},
+				{
+					"command": "viceroy.brazil.ws.use.p",
+					"group": "navigation",
+					"when": "view == brazilWorkspace"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "viceroy.navigate.code.url",
+					"group": "navigation@100",
+					"when": "resourceScheme == file"
+				},
+				{
+					"command": "viceroy.open.Config",
+					"group": "navigation@101",
+					"when": "resource =~ /Config$/"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "viceroy.brazil.ws.sync.md",
+					"when": "viewItem == viceroy.versionSet"
+				},
+				{
+					"command": "viceroy.brazil.build",
+					"group": "2_workspace",
+					"when": "viewItem == viceroy.package"
+				},
+				{
+					"command": "viceroy.brazil.ws.remove.p",
+					"group": "7_modification",
+					"when": "viewItem == viceroy.package"
+				},
+				{
+					"command": "viceroy.mwinit",
+					"when": "viewItem == viceroy.mwinit"
+				},
+				{
+					"command": "viceroy.aws.consoleAccess",
+					"when": "viewItem == viceroy.aws-account"
+				},
+				{
+					"command": "viceroy.aws.accountDetails",
+					"when": "viewItem == viceroy.aws-account"
+				},
+				{
+					"command": "viceroy.aws.configureAdaCredentialProcess",
+					"when": "viewItem == viceroy.aws-account"
+				},
+				{
+					"command": "viceroy.rde.wflow.step",
+					"when": "viewItem == viceroy.rde-step"
+				},
+				{
+					"command": "viceroy.sim.view-query",
+					"when": "viewItem == viceroy.sim.query"
+				},
+				{
+					"command": "viceroy.rde.wflow.run",
+					"when": "viewItem == viceroy.rde-workflow"
+				},
+				{
+					"command": "viceroy.rde.docs",
+					"when": "viewItem == viceroy.rde-root"
+				}
+			]
+		},
+		"taskDefinitions": [
+			{
+				"type": "brazil-build-task",
+				"required": [
+					"packageName"
+				],
+				"properties": {
+					"packageName": {
+						"type": "string",
+						"description": "Package in the workspace where brazil-build will run."
+					},
+					"env": {
+						"type": "object",
+						"description": "System environment variable overrides."
+					},
+					"args": {
+						"type": "array",
+						"description": "Additional arguments to brazil-build."
+					}
+				}
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "amzn-container",
+					"title": "Amazon Viceroy",
+					"icon": "./assets/viceroy-1.svg"
+				}
+			]
+		},
+		"views": {
+			"amzn-container": [
+				{
+					"id": "brazilWorkspace",
+					"name": "Brazil Workspace"
+				},
+				{
+					"id": "awsAccounts",
+					"name": "AWS Accounts"
+				},
+				{
+					"id": "sim",
+					"name": "Issues"
+				}
+			]
+		},
+		"languages": [
+			{
+				"id": "brazilPackageConfig",
+				"aliases": [
+					"Brazil Package Config"
+				],
+				"filenames": [
+					"Config"
+				],
+				"configuration": "./assets/languages/brazilPackageConfig/language.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "brazilPackageConfig",
+				"scopeName": "source.brazil-config",
+				"path": "./assets/languages/brazilPackageConfig/grammar.tmLanguage"
+			}
+		],
+		"snippets": [
+			{
+				"language": "brazilPackageConfig",
+				"path": "./assets/languages/brazilPackageConfig/snippets.json"
+			}
+		]
+	},
+	"__metadata": {
+		"installedTimestamp": 1628792460854
+	}
+}

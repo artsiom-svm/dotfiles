@@ -1,0 +1,85 @@
+{
+    "build-tools": {
+        "prefix": "build-tools",
+        "body": [
+            "build-tools = {",
+            "    ${1:version} = {",
+            "        ${2:packages}",
+            "    };",
+            "};"
+        ],
+        "description": "build-tools Section"
+    },
+
+    "runtime-dependencies": {
+        "prefix": "runtime-dependencies",
+        "body": [
+            "runtime-dependencies = {",
+            "    ${1:version} = {",
+            "        ${2:packages}",
+            "    };",
+            "};"
+        ],
+        "description": "runtime-dependencies Section"
+    },
+
+    "resolves-conflict-dependencies": {
+        "prefix": "resolves-conflict-dependencies",
+        "body": [
+            "resolves-conflict-dependencies = {",
+            "    ${1:version} = {",
+            "        ${2:packages}",
+            "    };",
+            "};"
+        ],
+        "description": "resolves-conflict-dependencies Section"
+    },
+
+    "remove-dependencies": {
+        "prefix": "remove-dependencies",
+        "body": [
+            "remove-dependencies = {",
+            "    ${1:version} = {",
+            "        ${2:packages}",
+            "    };",
+            "};"
+        ],
+        "description": "remove-dependencies Section"
+    },
+
+    "rebuild-when-dependency-changes": {
+        "prefix": "rebuild-when-dependency-changes",
+        "body": [
+            "rebuild-when-dependency-changes = {",
+            "    ${1:version} = {",
+            "        ${2:packages}",
+            "    };",
+            "};"
+        ],
+        "description": "rebuild-when-dependency-changes Section"
+    },
+
+    "test-dependencies": {
+        "prefix": "test-dependencies",
+        "body": [
+            "test-dependencies = {",
+            "    ${1:version} = {",
+            "        ${2:packages}",
+            "    };",
+            "};"
+        ],
+        "description": "test-dependencies Section"
+    },
+
+    "dependencies": {
+        "prefix": "dependencies",
+        "body": [
+            "dependencies = {",
+            "    ${1:version} = {",
+            "        ${2:packages}",
+            "    };",
+            "};"
+        ],
+        "description": "dependencies Section"
+    }
+}

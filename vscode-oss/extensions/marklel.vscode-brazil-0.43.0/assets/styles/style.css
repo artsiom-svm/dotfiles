@@ -1,0 +1,249 @@
+.backdrop {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--vscode-editor-background)), var(--bg-img);
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -2;
+  width: 99vw;
+  min-height: 100vh;
+  max-height: 1000px;
+  position: absolute;
+  top: 0; }
+
+.backdrop-info {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  background: var(--vscode-textCodeBlock-background);
+  box-shadow: 0px 2px 2px 2px var(--vscode-editor-background);
+  padding: 0.5rem;
+  margin-right: 1rem;
+  text-align: right; }
+  .backdrop-info h1 {
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0; }
+  .backdrop-info a {
+    font-size: 0.8rem;
+    text-decoration: none;
+    margin-left: 1rem; }
+  .backdrop-info a:link,
+.backdrop-info a:visited {
+    color: var(--vscode-descriptionForeground); }
+  .backdrop-info a:hover {
+    color: var(--vscode-foreground); }
+
+.toggle-beauty {
+  font-size: 0.6rem;
+  margin-top: 0.5rem; }
+
+i.loading {
+  font-size: 0.7rem;
+  font-style: italic;
+  margin-left: 0.25rem; }
+
+body {
+  padding: 0;
+  margin: 0; }
+
+table {
+  background: var(--vscode-textBlockQuote-background);
+  padding: 0.5rem;
+  border-spacing: 0;
+  width: 100%; }
+
+th {
+  text-align: left;
+  padding-bottom: 0.4rem; }
+
+td {
+  padding: 0.2rem 1rem;
+  white-space: nowrap; }
+
+td:last-child {
+  width: 99%;
+  white-space: initial; }
+
+tr:nth-child(even) {
+  background: var(--vscode-textCodeBlock-background); }
+
+header {
+  padding: 1rem;
+  padding-top: 0rem;
+  margin: 0rem;
+  margin-bottom: 2rem;
+  background: var(--vscode-textCodeBlock-background); }
+  header div {
+    display: flex; }
+  header svg {
+    padding-left: 1rem;
+    vertical-align: middle;
+    display: inline-block;
+    width: 4rem;
+    height: 4rem; }
+
+button {
+  padding: 0.2rem 1rem;
+  margin: 0.5rem 2rem;
+  color: var(--vscode-button-foreground);
+  background-color: var(--vscode-button-background);
+  border: 0; }
+  button:hover {
+    background-color: var(--vscode-button-hoverBackground); }
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%; }
+
+input:focus,
+textarea:focus {
+  background: var(--vscode-input-background);
+  border-color: var(--vscode-focusBorder); }
+
+input,
+textarea {
+  background-color: var(--vscode-input-background);
+  border: solid 3px var(--vscode-input-border);
+  color: var(--vscode-input-foreground); }
+
+.action-button {
+  font-size: 0.7rem;
+  margin: 0.1rem 0.2rem; }
+
+.action-toggle {
+  font-size: 0.7rem;
+  margin: 0.1rem 0.2rem;
+  opacity: 0.7; }
+
+.alternate-row-bg:nth-child(odd) {
+  background: var(--vscode-textCodeBlock-background); }
+
+.code {
+  font-family: monospace;
+  background: var(--vscode-textCodeBlock-background);
+  line-height: 1.25rem;
+  padding: 0.1rem 0.5rem; }
+
+section {
+  background: var(--vscode-editor-wordHighlightBackground);
+  padding: 0.001rem 1rem;
+  margin: 0rem; }
+
+.links {
+  padding-top: 1rem; }
+  .links ul {
+    white-space: nowrap;
+    padding: 0rem; }
+  .links li {
+    display: inline;
+    list-style-type: none; }
+  .links a {
+    line-height: 2.5rem;
+    padding: 0.5rem 2rem;
+    margin: 0 0.1rem;
+    text-decoration: none; }
+  .links a:link,
+.links a:visited {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-background); }
+  .links a:hover {
+    background-color: var(--vscode-button-hoverBackground); }
+
+.dependencies {
+  padding-bottom: 1rem; }
+  .dependencies span.small {
+    font-size: 0.75rem;
+    font-style: italic;
+    margin-left: 0.5rem; }
+  .dependencies a {
+    text-decoration: none; }
+  .dependencies a:link,
+.dependencies a:visited {
+    color: var(--vscode-descriptionForeground); }
+  .dependencies a:hover {
+    color: var(--vscode-foreground); }
+
+.error {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1rem;
+  background: var(--vscode-inputValidation-errorBackground);
+  border: solid 1px var(--vscode-inputValidation-errorBorder);
+  color: var(--vscode-errorForeground); }
+  .error pre {
+    border: solid 1px var(--vscode-inputValidation-infoBorder);
+    background: var(--vscode-inputValidation-infoBackground);
+    color: var(--vscode-input-foreground);
+    padding: 0.5rem 1rem;
+    overflow: scroll; }
+
+.detail {
+  color: var(--vscode-descriptionForeground);
+  opacity: 0.7; }
+
+.detail2 {
+  color: var(--vscode-descriptionForeground);
+  opacity: 0.9; }
+
+a.button {
+  padding: 0.2rem 2rem;
+  color: var(--vscode-button-foreground);
+  background-color: var(--vscode-button-background);
+  border: 0;
+  text-decoration: none; }
+  a.button:link, a.button:visited {
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-background); }
+  a.button:hover {
+    background-color: var(--vscode-button-hoverBackground); }
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 40px; }
+
+.lds-ellipsis div {
+  position: absolute;
+  top: 13px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0); }
+
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite; }
+
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite; }
+
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite; }
+
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite; }
+
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0); }
+  100% {
+    transform: scale(1); } }
+
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1); }
+  100% {
+    transform: scale(0); } }
+
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0); }
+  100% {
+    transform: translate(24px, 0); } }

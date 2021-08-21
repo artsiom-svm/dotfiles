@@ -1,0 +1,76 @@
+body {
+  padding: 0px;
+  margin: 0px; }
+
+span {
+  padding: 0.25em; }
+
+ul {
+  padding-left: 1.5rem; }
+
+a {
+  text-decoration: none; }
+
+body.vscode-light a:hover,
+body.vscode-light a:focus {
+  color: blue;
+  transition: color 100ms; }
+
+body.vscode-dark a:hover,
+body.vscode-dark a:focus {
+  color: white;
+  transition: color 150ms; }
+
+.vcr-header {
+  min-height: 0px; }
+
+header {
+  margin: 0; }
+  header .vcr-title {
+    font-size: 50px;
+    color: #222;
+    text-shadow: 1px 1px 8px #eee, 20px 3px 16px #eee, 30px 5px 24px #eee; }
+  header img {
+    position: relative;
+    top: 16px;
+    height: 64px;
+    width: 64px; }
+  header span {
+    margin-left: 20px; }
+  header sub {
+    font-weight: lighter;
+    text-shadow: initial; }
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 0em 0;
+  min-height: 2rem; }
+  .controls div {
+    align-self: center; }
+
+.explore article {
+  background: var(--vscode-textCodeBlock-background);
+  margin: 0.5rem 0rem;
+  padding: 1rem 0.5rem; }
+
+.vflex {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  flex-wrap: wrap; }
+
+.flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  flex-wrap: wrap;
+  margin: 1em 0; }
+  .flex section {
+    align-self: flex-start;
+    min-width: 30vw;
+    max-width: 40vw;
+    min-height: 200px;
+    margin: 0.5em 1em; }

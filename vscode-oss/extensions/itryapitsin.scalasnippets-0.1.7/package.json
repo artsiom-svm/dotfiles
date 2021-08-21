@@ -1,0 +1,23 @@
+{
+	"name": "ScalaSnippets",
+	"publisher": "itryapitsin",
+	"icon": "images/scala.png",
+	"description": "Code snippets for Scala",
+	"version": "0.1.7",
+	"categories": [
+		"Snippets"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/IliyaTryapitsin/vscode-scala.git"
+	},
+	"engines": {
+		"vscode": "*"
+	},
+	"__metadata": {
+		"id": "85ef49f9-9165-408b-988e-2d293965d33a",
+		"publisherId": "9667bc1a-f0d6-4756-b762-ecea1ebff39a",
+		"publisherDisplayName": "Iliya Tryapitsin",
+		"installedTimestamp": 1629403083438
+	}
+}

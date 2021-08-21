@@ -1,0 +1,1137 @@
+{
+  "definitions": {
+    "aws-parameter-roleArn": {
+      "type": "string",
+      "title": "Role Arn",
+      "description": "AWS IAM Role ARN associated with the AAA application",
+      "examples": [
+        "arn:aws:iam::123456789012:role/notUsed"
+      ]
+    },
+    "application-parameter-codeURI": {
+      "type": "string",
+      "title": "Code URI",
+      "description": "Relative path towards the workspace of the application",
+      "examples": [
+        "../../../MyApplicationWorkspace"
+      ]
+    },
+    "application-parameter-versionSet": {
+      "type": "string",
+      "title": "Brazil Version Set",
+      "description": "Version set of the application packages"
+    },
+    "application-parameter-apolloShimURI": {
+      "type": "string",
+      "title": "Apollo Shim URI",
+      "description": "Relative path towards the Apollo shim file of the application",
+      "examples": [
+        "apollo-shim/MyApplicationShim.json"
+      ]
+    },
+    "application-parameter-infrastructure": {
+      "type": "object",
+      "title": "Infrastructure",
+      "properties":{
+        "cfnParameters": {
+          "type": "object",
+          "title": "CloudformationParameters",
+          "description": "The Cloudformation parameters map",
+          "patternProperties": {
+            "^[\\w-]*$":{
+              "type": "string"
+            }
+          }
+        },
+        "localMode": {
+          "type": "object",
+          "title": "LocalMode",
+          "description": "Defines the setting for runnig resources locally",
+          "properties": {
+            "targets": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "A target to use locally. Current implementation supports Lambda functions."
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "targets"
+          ]
+        },
+        "enabled": {
+          "type": "boolean",
+          "title": "Enabled",
+          "description": "Enable Infrastructure building for the application",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "application-parameter-packages": {
+      "type": "object",
+      "title": "Packages",
+      "description": "A map of package names(keys) and package properties(values)",
+      "patternProperties": {
+        "^[\\w-]*$": {
+          "type": "object",
+          "title": "Package",
+          "description": "Package properties",
+          "properties": {
+            "buildTarget": {
+              "$ref": "#/definitions/package-build-params",
+              "title": "Build Target",
+              "description": "Brazil build target",
+              "default": "release",
+              "examples":[
+                "release",
+                "build"
+              ]
+            },
+            "buildTargetAliases": {
+              "type": "object",
+              "title": "Build Target Aliases",
+              "description": "Mappings between build target aliases and their corresponding Brazil build targets",
+              "patternProperties": {
+                "^[\\w-]*$": {
+                  "$ref": "#/definitions/package-build-params",
+                  "title": "Build Target Alias",
+                  "description": "Mapping between a build target alias and its corresponding Brazil build target",
+                  "examples": [
+                    "release",
+                    "build"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "isVersionSetTarget": {
+              "type": "boolean",
+              "title": "Is Version Set Target",
+              "description": "Marks package as the one that will generate the application runtime environment",
+              "default": false
+            },
+            "isApplicationTarget": {
+              "type": "boolean",
+              "title": "Is Application Target",
+              "description": "Marks package as the one that will generate the application runtime environment",
+              "default": false
+            },
+            "isBatsParameter": {
+              "type": "boolean",
+              "title": "Is BATS Parameter",
+              "description": "Marks package as the BATS parameters container",
+              "default": false
+            },
+            "hotDeployArtifacts": {
+              "type": "array",
+              "title": "Hot Deploy Artifacts",
+              "description": "Array of hot deploy artifact properties",
+              "items": {
+                "type": "object",
+                "title": "Hot Deploy Artifact",
+                "description": "Hot deploy artifact properties",
+                "properties": {
+                  "strategy": {
+                    "type": "string",
+                    "title": "Hot deploy strategy",
+                    "description": "The hot deploy artifact strategy",
+                    "default": "sync",
+                    "enum": [
+                      "sync",
+                      "hotswap"
+                    ]
+                  },
+                  "sourceURI": {
+                    "type": "string",
+                    "title": "Source URI",
+                    "description": "The source URI of the hot deploy artifact"
+                  },
+                  "destinationURI": {
+                    "type": "string",
+                    "title": "Destination URI",
+                    "description": "The destination URI of the hot deploy artifact"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "strategy",
+                  "sourceURI"
+                ]
+              }
+            },
+            "majorVersion": {
+              "type": "string",
+              "pattern": "^[\\w.]*$"
+            },
+            "branch": {
+              "type": "string"
+            }
+          },
+          "not": {
+            "anyOf": [
+              {"required": ["buildTarget", "buildTargetAliases"]},
+              {"required": ["buildTarget", "majorVersion"]},
+              {"required": ["buildTargetAliases", "majorVersion"]},
+              {"required": ["hotDeployArtifacts", "majorVersion"]},
+              {"required": ["branch", "majorVersion"]}
+            ]
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "application-parameter-mountPoints": {
+      "type": "array",
+      "title": "Mount Points",
+      "description": "An array of application mount points",
+      "items": {
+        "type": "object",
+        "title": "Mount Point",
+        "description": "Application mount point",
+        "properties": {
+          "sourceURI": {
+            "type": "string",
+            "title": "Source URI",
+            "description": "The source URI of the application mount point"
+          },
+          "destinationURI": {
+            "type": "string",
+            "title": "Destination URI",
+            "description": "The destination URI of the application mount point"
+          }
+        },
+        "additionalProperties": false,
+        "required":[
+          "sourceURI",
+          "destinationURI"
+        ]
+      }
+    },
+    "application-parameter-networkMappings": {
+      "type": "array",
+      "title": "Network Mappings",
+      "description": "An array of application network mappings",
+      "items": {
+        "type": "object",
+        "title": "Network Mapping",
+        "description": "Application Network Mapping",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the application network mapping",
+            "examples":[
+              "foo.amazon.com",
+              "my.service.dns.name.com"
+            ]
+          },
+          "internalPort": {
+            "type": "integer",
+            "title": "Internal Port",
+            "description": "The internal port of the application",
+            "default": 8080
+          },
+          "externalPort": {
+            "type": "integer",
+            "title": "External Port",
+            "description": "The external port of the application",
+            "default": 80
+          },
+          "exposedPort": {
+            "oneOf":[
+              {
+                "type": "integer",
+                "title": "Exposed Port",
+                "description": "The exposed port of the application",
+                "default": 1080
+              },
+              {
+                "type":"string",
+                "title": "Exposed Port",
+                "description": "The exposed port of the application",
+                "default": "127.0.0.1:1080"
+              }
+            ]
+          },
+          "protocol": {
+            "type": "string",
+            "title": "Protocol",
+            "description": "Network mapping protocol",
+            "default": "http",
+            "enum":[
+              "http",
+              "https",
+              "tcp"
+            ]
+          },
+          "healthCheck": {
+            "type": "object",
+            "description": "this is not yet used in RDE so do not include it",
+            "properties": {
+              "timeout": {
+                "type": "number"
+              },
+              "pingInterval": {
+                "type": "number"
+              }
+            }
+          },
+          "cipMagic": {
+            "type": "integer",
+            "title": "CIP Magic",
+            "description": "VIP Client IP magic number"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "internalPort"
+        ]
+      }
+    },
+    "application-parameter-aaa": {
+      "type": "object",
+      "title": "AAA",
+      "description": "RDE application AAA config",
+      "properties":{
+        "applicationName": {
+          "type": "string",
+          "title": "Application Name",
+          "description": "AAA Application Name",
+          "pattern": "^[\\w-]*$",
+          "examples":[
+            "MyApplication"
+          ]
+        },
+        "shimEnvironmentAlias": {
+          "type": "string",
+          "title": "Shim Environment Alias",
+          "description": "AAA Shim Environment Alias",
+          "pattern": "^[\\w-]*$",
+          "examples":[
+            "MyShimEnvironmentAlias"
+          ]
+        },
+        "roleArn": {
+          "$ref": "#/definitions/aws-parameter-roleArn"
+        },
+        "enabled": {
+          "type": "boolean",
+          "title": "Enabled",
+          "description": "Enables AAA for the application",
+          "default": false
+        }
+      },
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required":[
+            "applicationName"
+          ]
+        },
+        {
+          "required":[
+            "shimEnvironmentAlias"
+          ]
+        },
+        {
+          "required":[
+            "roleArn"
+          ]
+        }
+      ]
+    },
+    "application-parameter-environment": {
+      "type": "object",
+      "title": "Environment",
+      "description": "RDE application environment configuration",
+      "properties": {
+        "variables": {
+          "type": "object",
+          "title": "Variables",
+          "description": "RDE application environment variable map",
+          "patternProperties": {
+            "^[\\w-]*$":{
+              "type": "string",
+              "title": "Environment Variable",
+              "description": "An environment variable instance"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "application-parameter-runDefinitionURI": {
+      "type": "string",
+      "title": "Run Definition URI",
+      "description": "Relative path towards the run definition for a Hydra app",
+      "examples": [
+        "../path/to/my/runDefinition.json"
+      ]
+    },
+
+    "application-type-apollo": {
+      "type": "object",
+      "title": "Apollo Application",
+      "description": "RDE Personal Stack Apollo application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Apollo Application Type",
+          "description": "RDE Apollo application type",
+          "default": "brazil/apollo",
+          "enum": [
+            "brazil/apollo"
+          ]
+        },
+        "codeURI": {"$ref": "#/definitions/application-parameter-codeURI"},
+        "versionSet": {"$ref": "#/definitions/application-parameter-versionSet"},
+        "apolloShimURI": {"$ref": "#/definitions/application-parameter-apolloShimURI"},
+        "packages": {"$ref": "#/definitions/application-parameter-packages"},
+        "mountPoints": {"$ref": "#/definitions/application-parameter-mountPoints"},
+        "networkMappings": {"$ref": "#/definitions/application-parameter-networkMappings"},
+        "environment": {"$ref": "#/definitions/application-parameter-environment"},
+        "aaa": {"$ref": "#/definitions/application-parameter-aaa"},
+        "dependencies": {"$ref": "#/definitions/dependency-applications-map"}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codeURI"
+          ]
+        },
+        {
+          "required": [
+            "versionSet"
+          ]
+        }
+      ],
+      "required": [
+        "type",
+        "apolloShimURI",
+        "packages"
+      ]
+    },
+    "application-type-apollo-dependency": {
+      "type": "object",
+      "title": "Apollo Application",
+      "description": "RDE Personal Stack Apollo dependency application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Apollo Application Type",
+          "description": "RDE Apollo application type",
+          "default": "brazil/apollo",
+          "enum": [
+            "brazil/apollo"
+          ]
+        },
+        "codeURI": {"$ref": "#/definitions/application-parameter-codeURI"},
+        "versionSet": {"$ref": "#/definitions/application-parameter-versionSet"},
+        "apolloShimURI": {"$ref": "#/definitions/application-parameter-apolloShimURI"},
+        "packages": {"$ref": "#/definitions/application-parameter-packages"},
+        "mountPoints": {"$ref": "#/definitions/application-parameter-mountPoints"},
+        "networkMappings": {"$ref": "#/definitions/application-parameter-networkMappings"},
+        "environment": {"$ref": "#/definitions/application-parameter-environment"},
+        "aaa": {"$ref": "#/definitions/application-parameter-aaa"}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codeURI"
+          ]
+        },
+        {
+          "required": [
+            "versionSet"
+          ]
+        }
+      ],
+      "required": [
+        "type",
+        "apolloShimURI",
+        "packages"
+      ]
+    },
+    "application-type-sam": {
+      "type": "object",
+      "title": "SAM Application",
+      "description": "RDE Personal Stack SAM application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "SAM Application Type",
+          "description": "The RDE SAM application type",
+          "default": "sam",
+          "enum": [
+            "sam"
+          ]
+        },
+        "codeURI": {"$ref": "#/definitions/application-parameter-codeURI"},
+        "versionSet": {"$ref": "#/definitions/application-parameter-versionSet"},
+        "packages": {"$ref": "#/definitions/application-parameter-packages"},
+        "mountPoints": {"$ref": "#/definitions/application-parameter-mountPoints"},
+        "networkMappings": {"$ref": "#/definitions/application-parameter-networkMappings"},
+        "environment": {"$ref": "#/definitions/application-parameter-environment"},
+        "infrastructure": {"$ref": "#/definitions/application-parameter-infrastructure"}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codeURI"
+          ]
+        },
+        {
+          "required": [
+            "versionSet"
+          ]
+        }
+      ],
+      "required": [
+        "type",
+        "packages"
+      ]
+    },
+    "application-type-codedeploy": {
+      "type": "object",
+      "title": "Code Deploy Application",
+      "description": "RDE Personal Stack Code Deploy application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Code Deploy Application Type",
+          "description": "The RDE Code Deploy application type",
+          "default": "brazil/codedeploy",
+          "enum": [
+            "brazil/codedeploy"
+          ]
+        },
+        "codeURI": {"$ref": "#/definitions/application-parameter-codeURI"},
+        "versionSet": {"$ref": "#/definitions/application-parameter-versionSet"},
+        "packages": {"$ref": "#/definitions/application-parameter-packages"},
+        "mountPoints": {"$ref": "#/definitions/application-parameter-mountPoints"},
+        "networkMappings": {"$ref": "#/definitions/application-parameter-networkMappings"},
+        "environment": {"$ref": "#/definitions/application-parameter-environment"}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codeURI"
+          ]
+        },
+        {
+          "required": [
+            "versionSet"
+          ]
+        }
+      ],
+      "required": [
+        "type",
+        "packages"
+      ]
+    },
+    "application-type-group": {
+      "type": "object",
+      "title": "Group Application",
+      "description": "RDE Personal Stack group application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Group Application Type",
+          "description": "RDE group application type",
+          "default": "group",
+          "enum": [
+            "group"
+          ]
+        },
+        "applications": {"$ref":"#/definitions/group-applications-map"}
+      },
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "applications"
+      ]
+    },
+    "application-type-hydra": {
+      "type": "object",
+      "title": "Hydra Application",
+      "description": "RDE Personal Stack Hydra application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Hydra Application Type",
+          "description": "RDE Hydra application type",
+          "default": "hydra",
+          "enum": [
+            "hydra"
+          ]
+        },
+        "codeURI": {"$ref": "#/definitions/application-parameter-codeURI"},
+        "versionSet": {"$ref": "#/definitions/application-parameter-versionSet"},
+        "packages": {"$ref": "#/definitions/application-parameter-packages"},
+        "mountPoints": {"$ref": "#/definitions/application-parameter-mountPoints"},
+        "runDefinitionURI": {"$ref": "#/definitions/application-parameter-runDefinitionURI"},
+        "environment": {"$ref": "#/definitions/application-parameter-environment"}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codeURI"
+          ]
+        },
+        {
+          "required": [
+            "versionSet"
+          ]
+        }
+      ],
+      "required": [
+        "type",
+        "runDefinitionURI",
+        "packages"
+      ]
+    },
+    "application-type-regionalizedToD": {
+      "type": "object",
+      "title": "Regionalized ToD Application",
+      "description": "RDE Personal Stack Regionalized ToD application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Regionalized ToD Application Type",
+          "description": "RDE Regionalized ToD application type",
+          "default": "regionalizedToD",
+          "enum": [
+            "regionalizedToD"
+          ]
+        },
+        "codeURI": {"$ref": "#/definitions/application-parameter-codeURI"},
+        "versionSet": {"$ref": "#/definitions/application-parameter-versionSet"},
+        "packages": {"$ref": "#/definitions/application-parameter-packages"},
+        "mountPoints": {"$ref": "#/definitions/application-parameter-mountPoints"},
+        "environment": {"$ref": "#/definitions/application-parameter-environment"},
+        "aaa": {"$ref": "#/definitions/application-parameter-aaa"}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codeURI"
+          ]
+        },
+        {
+          "required": [
+            "versionSet"
+          ]
+        }
+      ],
+      "required": [
+        "type",
+        "packages"
+      ]
+    },
+    "application-type-container": {
+      "type": "object",
+      "title": "Container Application",
+      "description": "RDE Personal Stack Container application",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Container Application Type",
+          "description": "RDE Container application type",
+          "default": "container",
+          "enum": [
+            "container"
+          ]
+        },
+        "codeURI": {"$ref": "#/definitions/application-parameter-codeURI"},
+        "versionSet": {"$ref": "#/definitions/application-parameter-versionSet"},
+        "packages": {"$ref": "#/definitions/application-parameter-packages"},
+        "mountPoints": {"$ref": "#/definitions/application-parameter-mountPoints"},
+        "networkMappings": {"$ref": "#/definitions/application-parameter-networkMappings"},
+        "environment": {"$ref": "#/definitions/application-parameter-environment"}
+      },
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "codeURI"
+          ]
+        },
+        {
+          "required": [
+            "versionSet"
+          ]
+        }
+      ],
+      "required": [
+        "type",
+        "packages"
+      ]
+    },
+    "application-map": {
+      "type": "object",
+      "title": "RDE Applications",
+      "description": "Personal Stack application map",
+      "patternProperties": {
+        "^[\\w-]*$": {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "RDE application type",
+              "description": "RDE application type",
+              "enum": [
+                "hydra",
+                "sam",
+                "brazil/apollo",
+                "brazil/codedeploy",
+                "group",
+                "regionalizedToD",
+                "container"
+              ]
+            }
+          },
+          "oneOf": [
+            {"$ref": "#/definitions/application-type-apollo"},
+            {"$ref": "#/definitions/application-type-group"},
+            {"$ref": "#/definitions/application-type-sam"},
+            {"$ref": "#/definitions/application-type-codedeploy"},
+            {"$ref": "#/definitions/application-type-hydra"},
+            {"$ref": "#/definitions/application-type-regionalizedToD"},
+            {"$ref": "#/definitions/application-type-container"}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "dependency-applications-map": {
+      "type": "object",
+      "title": "RDE Nested Applications",
+      "description": "Personal Stack dependency applications map",
+      "patternProperties": {
+        "^[\\w-]*$": {"$ref": "#/definitions/application-type-apollo-dependency"}
+      },
+      "additionalProperties": false
+    },
+    "group-applications-map": {
+      "type": "object",
+      "title": "RDE Group Applications",
+      "description": "Personal Stack group applications map",
+      "patternProperties": {
+        "^[\\w-]*$": {"$ref": "#/definitions/application-type-apollo"}
+      },
+      "additionalProperties": false
+    },
+
+    "application-name-array": {
+      "type":"array",
+      "title":"Applications",
+      "description":"Application list",
+      "items":{
+        "type":"string",
+        "title":"Application",
+        "description":"RDE application name"
+      }
+    },
+    "step-type-build": {
+      "type": "object",
+      "title": "Build Step",
+      "description": "RDE build step type",
+      "properties":{
+        "type": {
+          "type": "string",
+          "default": "build",
+          "enum":[
+            "build"
+          ]
+        },
+        "arguments": {
+          "type":"object",
+          "title": "Build step arguments",
+          "description": "RDE build step arguments",
+          "properties": {
+            "applications": {"$ref":"#/definitions/application-name-array"},
+            "force": {
+              "type": "boolean",
+              "title": "Force",
+              "description": "Force a clean build",
+              "default": false
+            },
+            "container": {
+              "type": "boolean",
+              "title": "Container",
+              "description": "Execute a container build",
+              "default": false
+            },
+            "buildTargetAlias": {
+              "type": "string",
+              "title": "Build Target Alias",
+              "description": "An build target alias for the Brazil build target",
+              "default": "default"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required":[
+        "type"
+      ]
+    },
+    "step-type-deploy": {
+      "type": "object",
+      "title": "Deploy Step",
+      "description": "RDE deploy step type",
+      "properties":{
+        "type": {
+          "type": "string",
+          "default": "deploy",
+          "enum":[
+            "deploy"
+          ]
+        },
+        "arguments": {
+          "type":"object",
+          "title": "Deploy Step Arguments",
+          "description": "RDE deploy step arguments",
+          "properties": {
+            "applications": {"$ref":"#/definitions/application-name-array"},
+            "deployType": {
+              "type": "string",
+              "title": "Deploy Type",
+              "description": "RDE deployment type",
+              "default": "cold",
+              "enum":[
+                "cold",
+                "warm"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ]
+    },
+    "step-type-stackExec": {
+      "type": "object",
+      "title": "Stack Exec Step",
+      "description": "RDE stack exec step type",
+      "properties":{
+        "type": {
+          "type": "string",
+          "default": "stackExec",
+          "enum":[
+            "stackExec"
+          ]
+        },
+        "arguments": {
+          "type":"object",
+          "title": "Stack Exec Step Arguments",
+          "description": "RDE stack exec step arguments",
+          "properties": {
+            "applications": {"$ref":"#/definitions/application-name-array"},
+            "command": {
+              "type": "string",
+              "title": "Stack Exec Command",
+              "description": "The command for the stack exec step"
+            },
+            "scriptURI": {
+              "type": "string",
+              "title": "Stack Exec Script URI",
+              "description": "The script URI for the stack exec step"
+            },
+            "scriptArguments": {
+              "type": "string",
+              "title": "Stack Exec Script Arguments",
+              "description": "The script arguments for the stack exec step"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required":[
+        "type",
+        "arguments"
+      ]
+    },
+    "step-type-custom": {
+      "type": "object",
+      "title": "Custom Step",
+      "description": "RDE custom step type",
+      "properties":{
+        "type": {
+          "type": "string",
+          "default": "custom",
+          "enum":[
+            "custom"
+          ]
+        },
+        "arguments": {
+          "type":"object",
+          "title": "Custom Step Arguments",
+          "description": "RDE custom step arguments",
+          "properties": {
+            "applications": {"$ref":"#/definitions/application-name-array"},
+            "command": {
+              "type": "string",
+              "title": "Command",
+              "description": "The command for the custom step"
+            },
+            "scriptURI": {
+              "type": "string",
+              "title": "Script URI",
+              "description": "The script URI for the custom step"
+            },
+            "scriptArguments": {
+              "type": "string",
+              "title": "Script Arguments",
+              "description": "The script arguments for the custom step"
+            },
+            "scriptInterpreter": {
+              "type": "string",
+              "title": "Script Interpreter",
+              "description": "The script interpreter for the custom step"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required":[
+        "type",
+        "arguments"
+      ]
+    },
+    "step-type-regionalizedToD": {
+      "type": "object",
+      "title": "Regionalized ToD Step",
+      "description": "RDE Regionalized ToD step type",
+      "properties":{
+        "type": {
+          "type": "string",
+          "default": "regionalizedToD",
+          "enum":[
+            "regionalizedToD"
+          ]
+        },
+        "arguments": {
+          "type":"object",
+          "title": "Regionalized ToD Step Arguments",
+          "description": "RDE Regionalized ToD step arguments",
+          "properties": {
+            "codeURI": {
+              "type": "string",
+              "title": "Code URI",
+              "description": "Relative path towards the root of the ToD brazil package"
+            },
+            "scriptName": {
+              "type": "string",
+              "title": "Script Name",
+              "description": "Regionalized ToD script name"
+            },
+            "scriptArguments": {
+              "type": "string",
+              "title": "Script Arguments",
+              "description": "Regionalized ToD script arguments"
+            },
+            "aaa": {"$ref": "#/definitions/application-parameter-aaa"}
+          },
+          "additionalProperties": false,
+          "required":[
+            "codeURI",
+            "scriptName",
+            "scriptArguments"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required":[
+        "type",
+        "arguments"
+      ]
+    },
+    "step-type-provision": {
+      "type": "object",
+      "title": "Provision Step",
+      "description": "RDE provision step type",
+      "properties":{
+        "type": {
+          "type": "string",
+          "default": "provision",
+          "enum":[
+            "provision"
+          ]
+        },
+        "arguments": {
+          "type":"object",
+          "title": "Provision step arguments",
+          "description": "RDE provision step arguments",
+          "properties": {
+            "applications": {"$ref":"#/definitions/application-name-array"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "required":[
+        "type"
+      ]
+    },
+    "package-build-params": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    }
+
+  },
+
+  "type": "object",
+  "properties": {
+    "version": {
+      "type":"string",
+      "title": "Version",
+      "description": "The version of the definition file format",
+      "default": "2016-11-18",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "enum": [
+        "2016-11-18"
+      ]
+    },
+    "stack": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Stack Name",
+          "description": "RDE Personal Stack Name",
+          "default": "MyPersonalStack",
+          "pattern": "^[\\w-]*$",
+          "examples": [
+            "MyPersonalStack"
+          ]
+        },
+        "devAccount": {
+          "type": "object",
+          "title": "Dev Account",
+          "description": "AWS development account",
+          "properties": {
+            "type": {
+              "type":"string",
+              "title": "Account Type",
+              "description": "The AWS development account type",
+              "enum":[
+                "Isengard",
+                "Conduit",
+                "MidwayFederated"
+              ]
+            },
+            "roleArn": {
+              "$ref": "#/definitions/aws-parameter-roleArn"
+            }
+          },
+          "additionalProperties": false,
+          "required":[
+            "type",
+            "roleArn"
+          ]
+        },
+        "ec2MetadataURI": {
+          "type": "string",
+          "title": "EC2 Metadata URI",
+          "description": "Path to yaml file that overrides the values returned by the EC2 Metadata Service",
+          "examples": [
+            "relative/path/to/definition/ec2metadata.yaml"
+          ]
+        },
+        "applications": {"$ref": "#/definitions/application-map"}
+      },
+      "additionalProperties": false,
+      "required":[
+        "name",
+        "applications"
+      ]
+    },
+    "steps": {
+      "type": "object",
+      "title": "RDE Steps",
+      "description": "A map of RDE step names and their configuration",
+      "patternProperties":{
+        "^[\\w-]*$":{
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "title": "RDE step type",
+              "description": "RDE step type",
+              "enum": [
+                "build",
+                "custom",
+                "deploy",
+                "provision",
+                "regionalizedToD",
+                "stackExec"
+              ]
+            }
+          },
+          "oneOf":[
+            {"$ref":"#/definitions/step-type-build"},
+            {"$ref":"#/definitions/step-type-custom"},
+            {"$ref":"#/definitions/step-type-deploy"},
+            {"$ref":"#/definitions/step-type-provision"},
+            {"$ref":"#/definitions/step-type-regionalizedToD"},
+            {"$ref":"#/definitions/step-type-stackExec"}
+          ]
+        }
+      },
+      "additionalProperties":false
+    },
+    "workflows": {
+      "type": "object",
+      "title": "Workflows",
+      "description": "A map of RDE workflows",
+      "patternProperties":{
+        "^[\\w-]*$":{
+          "type": "array",
+          "title": "Step List",
+          "description": "A list of RDE steps",
+          "items":{
+            "type": "string",
+            "title": "Step Name",
+            "description": "An RDE Step Name",
+            "pattern":"^[\\w-]*$"
+          }
+        }
+      },
+      "additionalProperties":false
+    }
+  },
+  "additionalProperties":false
+}
